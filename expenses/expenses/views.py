@@ -38,3 +38,16 @@ def get_user_balances(request):
 def simplify_expenses(request):
     # Implement logic to simplify balances based on request data
     return Response({"message": "Expenses simplified successfully."})
+
+
+from .tasks import send_expense_notification
+
+# Your view function
+def create_expense(request):
+    # Your expense creation logic here
+
+    # Trigger the task asynchronously
+    for participant_email in participants_emails:
+        send_expense_notification.delay(participant_email, total_amount)
+    
+    # Rest of view logic
